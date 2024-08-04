@@ -7,7 +7,7 @@ class ProductCategoryModelAdmin(admin.ModelAdmin):
 
 @admin.register(ProductModel)
 class ProductModelAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'stock', 'status', 'created_date']
+    list_display = ['id', 'title', 'stock', 'price', 'discount_percent', 'status', 'created_date']
 
 @admin.register(ProductImageModel)
 class ProductImageModelAdmin(admin.ModelAdmin):

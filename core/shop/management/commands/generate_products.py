@@ -27,7 +27,7 @@ class Command(BaseCommand):
             './images/image_5.jpg', 
         ]
         
-        for _ in range(10):  # Adjust number of products to create
+        for _ in range(30):  # Adjust number of products to create
             user=user
             num_categories = random.randint(1,4)
             selected_categoreis = random.sample(list(categories), num_categories)
