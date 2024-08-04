@@ -9,6 +9,7 @@ click-plugins==1.1.1
 click-repl==0.3.0
 Django==4.2.14
 django-debug-toolbar==4.4.6
+Faker==26.1.0
 kombu==5.3.7
 pillow==10.4.0
 prompt_toolkit==3.0.47
