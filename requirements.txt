@@ -13,5 +13,6 @@ django-debug-toolbar==4.4.6
 python-decouple==3.8
 
 
-
-
+# background processor and cache
+celery
+redis
