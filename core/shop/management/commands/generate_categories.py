@@ -7,7 +7,7 @@ class Command(BaseCommand):
     help = 'Generate fake product categories'
 
     def handle(self, *args, **kwargs):
-        fake = Faker(locale="fa_IR")
+        fake = Faker(locale='fa_IR')
         for _ in range(10):  # Generate 10 fake categories
             title = fake.unique.word()
             slug = slugify(title, allow_unicode=True)

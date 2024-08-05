@@ -13,7 +13,7 @@ class Command(BaseCommand):
     help = 'Generate fake products'
 
     def handle(self, *args, **kwargs):
-        fake = Faker(locale="fa_IR")
+        fake = Faker(locale='fa_IR')
        
         user = User.objects.get(type=UserType.admin.value)
         categories = ProductCategoryModel.objects.all()  # Get all categories
@@ -27,7 +27,7 @@ class Command(BaseCommand):
             './images/image_5.jpg', 
         ]
         
-        for _ in range(30):  # Adjust number of products to create
+        for _ in range(10):  # Adjust number of products to create
             user=user
             num_categories = random.randint(1,4)
             selected_categoreis = random.sample(list(categories), num_categories)
@@ -36,6 +36,7 @@ class Command(BaseCommand):
             selected_image = random.choice(image_list)
             image_obj = File(file=open(BASE_DIR / selected_image,"rb"),name=Path(selected_image).name)
             description = fake.paragraph(nb_sentences=10)
+            breif_description = fake.paragraph(nb_sentences=1)
             stock = random.randint(0, 100)
             status = random.choice(ProductStatusType.choices)[0]
             price = fake.random_int(min=1000, max=100000)
@@ -47,6 +48,7 @@ class Command(BaseCommand):
                 slug=slug,
                 image=image_obj,
                 description=description,
+                breif_description=breif_description,
                 stock=stock,
                 status=status,
                 price=price,
