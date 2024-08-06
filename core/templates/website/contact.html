@@ -3,7 +3,7 @@
 
 {% block content %}
         <!-- Hero -->
-        <div class="position-relative bg-img-start" style="background-image: url({% static 'svg/components/card-11.svg' %});">
+        <div class="position-relative bg-img-start" style="background-image: url(./assets/svg/components/card-11.svg);">
             <div class="container content-space-t-3 content-space-t-lg-5 content-space-b-2 position-relative zi-2">
                 <div class="w-md-75 w-lg-50 text-center mx-md-auto mb-5 mb-md-9">
                     <h1>تماس با ما</h1>
@@ -126,14 +126,15 @@
                         <!-- End Heading -->
 
                         <!-- Form -->
-                        <form>
+                        <form method="post" action="{% url 'website:contact' %}">
+                            {% csrf_token %}
                             <div class="row gx-3">
                                 <div class="col-sm-6">
                                     <!-- Form -->
                                     <div class="mb-3">
                                         <label class="form-label" for="hireUsFormFirstName">نام</label>
                                         <input type="text" class="form-control form-control-lg"
-                                            name="hireUsFormNameFirstName" id="hireUsFormFirstName"
+                                            name="first_name" 
                                             placeholder="نام" aria-label="First name">
                                     </div>
                                     <!-- End Form -->
@@ -145,7 +146,7 @@
                                     <div class="mb-3">
                                         <label class="form-label" for="hireUsFormLasttName">نام خانوادگی</label>
                                         <input type="text" class="form-control form-control-lg"
-                                            name="hireUsFormNameLastName" id="hireUsFormLasttName"
+                                            name="last_name" 
                                             placeholder="نام خانوادگی" aria-label="Last name">
                                     </div>
                                     <!-- End Form -->
@@ -160,7 +161,7 @@
                                     <div class="mb-3">
                                         <label class="form-label" for="hireUsFormWorkEmail">آدرس ایمیل</label>
                                         <input type="email" class="form-control form-control-lg"
-                                            name="hireUsFormNameWorkEmail" id="hireUsFormWorkEmail"
+                                            name="email" 
                                             placeholder="email@site.com" aria-label="email@site.com">
                                     </div>
                                     <!-- End Form -->
@@ -173,7 +174,7 @@
                                         <label class="form-label" for="hireUsFormPhone">شماره همراه <span
                                                 class="form-label-secondary">(اختیاری)</span></label>
                                         <input type="text" class="form-control form-control-lg"
-                                            name="hireUsFormNamePhone" id="hireUsFormPhone"
+                                            name="phone_number"
                                             placeholder="+9891200000">
                                     </div>
                                     <!-- End Form -->
@@ -185,8 +186,8 @@
                             <!-- Form -->
                             <div class="mb-3">
                                 <label class="form-label" for="hireUsFormDetails">توضیحات</label>
-                                <textarea class="form-control form-control-lg" name="hireUsFormNameDetails"
-                                    id="hireUsFormDetails" placeholder="توضیحات خود را وارد نمایید"
+                                <textarea class="form-control form-control-lg" name="description"
+                                     placeholder="توضیحات خود را وارد نمایید"
                                     aria-label="Tell us about your ..." rows="4"></textarea>
                             </div>
                             <!-- End Form -->
@@ -206,8 +207,4 @@
             </div>
         </div>
         <!-- End Contact Form -->
-
-  {% endblock content %}
-
-
-   
+{% endblock content %}
