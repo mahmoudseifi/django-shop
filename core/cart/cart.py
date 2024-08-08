@@ -20,6 +20,19 @@ class CartSession:
             }
             self._cart["items"].append(new_item)
         self.save()
+        
+    def add_product_with_quantity(self, product_id, quantity): 
+        for item in self._cart["items"]:
+            if product_id == item["product_id"]:
+                item["quantity"] = quantity
+                break
+        else: 
+            new_item = {
+                "product_id":product_id,
+                "quantity":quantity,                    
+            }
+            self._cart["items"].append(new_item)
+        self.save()
     
     def update_product_quantity(self, product_id, quantity):
         for item in self._cart["items"]:
@@ -57,7 +70,7 @@ class CartSession:
         return sum(item["total_price"] for item in self._cart["items"])
     
     def get_total_quantity(self):
-        return sum(item["quantity"] for item in self._cart["items"])
+        return sum(int(item["quantity"]) for item in self._cart["items"])
     
     
     def get_total_items(self):

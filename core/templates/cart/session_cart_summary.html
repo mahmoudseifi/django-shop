@@ -59,7 +59,9 @@
                                             <div class="col-auto">
                                                 <!-- Select -->
                                                 <select class="form-select form-select-sm mb-3" onchange="changeProductQuantity('{{item.product_id}}', this.value)">
-
+                                                    {% if item.quantity %}
+                                                    <option value="{{item.quantity }}"  selected>{{ item.quantity }}</option>
+                                                    {% endif %}
                                                     {% with ''|center:item.product_obj.stock as range %}
                                                     {% for _ in range %}
                                                     <option value="{{ forloop.counter }}" {% if forloop.counter == item.quantity %} selected {% endif %}>{{ forloop.counter }}</option>
@@ -104,7 +106,7 @@
                 <!-- End List Group -->
 
                 <div class="d-sm-flex justify-content-end">
-                    <a class="link" href="/products-grid.html">
+                    <a class="link" href="{% url 'shop:product_grid' %}">
                         به خرید ادامه دهید <i class="bi-chevron-left small ms-1"></i>
                     </a>
                 </div>

@@ -13,6 +13,10 @@ class ProductCategoryModel(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        verbose_name = 'Product Category'
+        verbose_name_plural = 'Product Categories'
+    
     def __str__(self):
         return self.title
 
@@ -35,6 +39,8 @@ class ProductModel(models.Model):
 
     class Meta:
         ordering = ['-created_date']
+        verbose_name = 'Product'
+        verbose_name_plural = 'Products'
 
     def __str__(self):
         return self.title
@@ -55,3 +61,7 @@ class ProductImageModel(models.Model):
     
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = 'Product Image'
+        verbose_name_plural = 'Product Images'
