@@ -7,7 +7,7 @@ from django.contrib.auth.models import (
 from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from accounts.validators import validate_iranian_cellphone_number
+from accounts.validators import validate_iranian_cellphone_number, validate_image_extension, validate_image_size
 
 class UserType(models.IntegerChoices):
     customer = 1, _("customer")
@@ -80,7 +80,7 @@ class Profile(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=11, validators=[validate_iranian_cellphone_number])
-    image = models.ImageField(upload_to='profile/', default='profile/default.png')
+    image = models.ImageField(upload_to='profile/', default='profile/default.png', validators=[validate_image_extension, validate_image_size])
     
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)

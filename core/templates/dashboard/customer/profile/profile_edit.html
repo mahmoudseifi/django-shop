@@ -1,4 +1,4 @@
-{% extends "dashboard/admin/base.html" %}
+{% extends "dashboard/customer/base.html" %}
 {% load static %}
 
 
@@ -30,7 +30,7 @@
             <div class="col-sm-9">
                 <!-- Media -->
 
-                <form action="{% url 'dashboard:admin:profile_image_edit' %}" method="post"
+                <form action="{% url 'dashboard:customer:profile_image_edit' %}" method="post"
                     class="d-flex align-items-center" enctype="multipart/form-data">
                     {% csrf_token %}
                     <!-- Avatar -->

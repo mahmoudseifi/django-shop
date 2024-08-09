@@ -27,4 +27,8 @@ class AdminProfileEditForm(forms.ModelForm):
         self.fields['last_name'].widget.attrs.update({'class': 'form-control text-center'})
         self.fields['phone_number'].widget.attrs.update({'class': 'form-control text-center'})   
         
-    
+
+class AdminProfileImageForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['image']
