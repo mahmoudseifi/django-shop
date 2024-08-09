@@ -1,6 +1,8 @@
 from django.db.models.base import Model as Model
+from django.forms import BaseForm
+from django.http.response import HttpResponse
 from django.shortcuts import redirect
-from django.views.generic import ListView
+from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import views as auth_views
 from django.contrib.messages.views import SuccessMessageMixin
@@ -9,7 +11,7 @@ from accounts.models import Profile
 from django.contrib import messages
 from django.core.exceptions import FieldError
 from shop.models import ProductModel, ProductCategoryModel
-from ..forms import AdminChangePasswordForm,  AdminProfileEditForm, AdminProfileImageForm
+from ..forms import AdminProductForm
 from ...permissions import HasAdminAccessPermission
 
 
@@ -44,4 +46,33 @@ class AdminProductListView(LoginRequiredMixin, HasAdminAccessPermission, ListVie
         context['total_items'] = self.get_queryset().count()
         context['categories'] = ProductCategoryModel.objects.all()
         return context
+
+
+class AdminProductCreateView(LoginRequiredMixin, HasAdminAccessPermission,SuccessMessageMixin, CreateView):
+    template_name = 'dashboard/admin/products/product_create.html'
+    queryset = ProductModel.objects.all()
+    form_class = AdminProductForm
+    success_message = 'ایجاد محصول با موفقیت انجام شد.'
+    success_url = reverse_lazy('dashboard:admin:product_list')
     
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+    
+    
+class AdminProductEditView(LoginRequiredMixin, HasAdminAccessPermission,SuccessMessageMixin, UpdateView):
+    template_name = 'dashboard/admin/products/product_edit.html'
+    queryset = ProductModel.objects.all()
+    form_class = AdminProductForm
+    success_message = 'ویرایش محصول با موفقیت انجام شد.'
+    
+    def get_success_url(self):
+        return reverse_lazy('dashboard:admin:product_edit',kwargs={'pk': self.get_object().pk})
+
+    
+
+class AdminProductDeleteView(LoginRequiredMixin, HasAdminAccessPermission,SuccessMessageMixin, DeleteView):
+    template_name = 'dashboard/admin/products/product_delete.html'
+    queryset = ProductModel.objects.all()
+    success_url = reverse_lazy('dashboard:admin:product_list')
+    success_message = 'حذف محصول با موفقیت انجام شد.'

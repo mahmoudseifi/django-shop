@@ -1,0 +1,53 @@
+{% extends "dashboard/admin/base.html" %}
+{% load static %}
+
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb breadcrumb-light mb-0">
+        <li class="breadcrumb-item">حساب</li>
+        <li class="breadcrumb-item" aria-current="page">
+            داشبورد ادمین
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            حذف محصول
+        </li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <!-- Header -->
+    <div class="card-header border-bottom">
+        <h5 class="card-header-title">ویرایش/ساخت محصول</h5>
+    </div>
+    <!-- End Header -->
+
+    <!-- Body -->
+    <form action="." method="post">
+        {% csrf_token %}
+        <div class="card-body">
+            <p>
+                <span>آیا از حذف این محصول اطمینان دارید؟</span>
+            </p>
+            <p>نام محصول: {{object.title}}</p>
+            <p>َشناسه محصول: {{object.title}}</p>
+
+            </div>
+            <div class="card-footer">
+                <div class=" d-flex pt-5 justify-content-end">
+                    <button type="submit" class="btn btn-danger ms-3" href="{% url 'dashboard:admin:product_delete' pk=object.id %}">حذف محصول</button>
+                    <a class="btn btn-secondary ms-3" href="{% url 'dashboard:admin:product_list' %}">بازگشت</a>
+                    
+                </div>
+            </div>
+    </form>
+</div>
+
+
+
+
+
+{% endblock %}
