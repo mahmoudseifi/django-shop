@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'ckeditor',
+    'ckeditor_uploader',
 
     'website',
     'accounts',
@@ -169,3 +172,19 @@ AUTH_USER_MODEL = 'accounts.User'
 # redirect to home
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+
+# ckeditor configs
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': '100%',
+        'extraPlugins': ','.join([
+            'uploadimage',  # the upload image feature
+            # add more plugins if needed
+        ]),
+    },
+}

@@ -1,6 +1,7 @@
 from django.db import models
 from decimal import Decimal
 from django.core.validators import MinValueValidator, MaxValueValidator
+from ckeditor_uploader.fields import RichTextUploadingField
 
 class ProductStatusType(models.IntegerChoices):
     publish = 1, 'نمایش'
@@ -23,8 +24,8 @@ class ProductModel(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(allow_unicode=True)
     image = models.ImageField(default='/product/product-image.jpg', upload_to='product/img/')
-    description = models.TextField()
-    breif_description = models.TextField(null=True, blank=True)
+    description =RichTextUploadingField()
+    breif_description = RichTextUploadingField(null=True, blank=True)
     stock = models.PositiveIntegerField(default=0)
     status = models.IntegerField(choices=ProductStatusType.choices, default=ProductStatusType.draft.value)
     price = models.DecimalField(default=0, max_digits=10, decimal_places=0)
