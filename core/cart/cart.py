@@ -57,7 +57,7 @@ class CartSession:
         return sum(item["total_price"] for item in self._cart["items"])
     
     def get_total_quantity(self):
-        return sum(item["quantity"] for item in self._cart["items"])
+        return sum(int(item["quantity"]) for item in self._cart["items"])
     
     
     def get_total_items(self):
