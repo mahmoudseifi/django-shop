@@ -1,20 +1,28 @@
-
-from django.views.generic import (
-    ListView,
-    DetailView
-)
+from django.db.models.base import Model as Model
+from django.shortcuts import redirect
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import views as auth_views
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy
+from accounts.models import Profile
+from django.contrib import messages
 from django.core.exceptions import FieldError
-from .models import ProductModel, ProductStatusType, ProductCategoryModel
+from shop.models import ProductModel, ProductCategoryModel
+from ..forms import AdminChangePasswordForm,  AdminProfileEditForm, AdminProfileImageForm
+from ...permissions import HasAdminAccessPermission
 
-class ShopProductGridView(ListView):
-    template_name = 'shop/products_grid.html'
+
+
+class AdminProductListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
+    template_name = 'dashboard/admin/products/product_list.html'
     paginate_by = 9
     
     def get_paginate_by(self, queryset):
         return self.request.GET.get('page_size', self.paginate_by)
     
     def get_queryset(self):
-        queryset = ProductModel.objects.filter(status=ProductStatusType.publish.value)
+        queryset = ProductModel.objects.all()
         if search_q:=self.request.GET.get('q'):
             queryset = queryset.filter(title__icontains=search_q)
         if category_id:=self.request.GET.get('category_id'):
@@ -36,10 +44,4 @@ class ShopProductGridView(ListView):
         context['total_items'] = self.get_queryset().count()
         context['categories'] = ProductCategoryModel.objects.all()
         return context
-    
-    
-class ShopProductDetailView(DetailView):
-    template_name = 'shop/products_detail.html'
-    queryset = ProductModel.objects.filter(status=ProductStatusType.publish.value)
-    
     
