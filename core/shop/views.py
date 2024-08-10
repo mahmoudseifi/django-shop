@@ -1,4 +1,5 @@
 
+from typing import Any
 from django.views.generic import (
     ListView,
     DetailView
@@ -42,4 +43,5 @@ class ShopProductDetailView(DetailView):
     template_name = 'shop/products_detail.html'
     queryset = ProductModel.objects.filter(status=ProductStatusType.publish.value)
     
+
     

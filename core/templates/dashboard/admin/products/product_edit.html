@@ -18,7 +18,7 @@
 
 {% block content %}
 
-<div class="card">
+<div class="card mb-3">
     <!-- Header -->
     <div class="card-header border-bottom">
         <div class="d-flex justify-content-between align-items-center">
@@ -87,6 +87,47 @@
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <!-- Header -->
+    <div class="card-header border-bottom">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="">تصاویر بیشتر</h5>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Body -->
+    <div class="card-body">
+        <div class="container pb-5">
+            <form action="{% url 'dashboard:admin:product_add_image' pk=object.id %}" method="post" enctype="multipart/form-data" class="row">
+                {% csrf_token %}
+                <div class="col-md-12 mb-3">
+                    <label for="validationValidFileInput1">تصویر محصول</label>
+                    {{image_form.file}}
+                </div>
+                <div class="card-footer">
+                    <div class=" d-flex pt-5 justify-content-end">
+                        <button class="btn btn-primary ms-3" type="submit">ارسال تصویر</button>
+                    </div>
+                </div>
+            </form>
+            <div class="card-body">
+                <div class="row d-flex">
+                    {% for product_image in object.product_images.all %}
+                    <div class="col-md-2">
+                        <img class="img-fluid" src="{{product_image.file.url}}" alt="Product Image">
+                        <form action="{% url 'dashboard:admin:product_delete_image' pk=object.id image_id=product_image.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">حذف </button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 </div>

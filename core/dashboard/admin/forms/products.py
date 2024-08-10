@@ -1,5 +1,5 @@
 from django import forms
-from shop.models import ProductModel
+from shop.models import ProductModel, ProductImageModel
 
 
 class AdminProductForm(forms.ModelForm):
@@ -30,3 +30,14 @@ class AdminProductForm(forms.ModelForm):
         self.fields['status'].widget.attrs.update({'class': 'form-select is-valid'})   
         self.fields['price'].widget.attrs.update({'class': 'form-control is-valid'}) 
         self.fields['discount_percent'].widget.attrs.update({'class': 'form-control is-valid'})  
+        
+
+class ProductImageForm(forms.ModelForm):
+    class Meta:
+        model = ProductImageModel
+        fields = ['file']
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['file'].widget.attrs.update({'class': 'form-control is-valid'})   
+      
