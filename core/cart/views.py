@@ -42,7 +42,7 @@ class SessionRemoveProductView(View):
             
         return JsonResponse({'cart':cart.get_cart_dict(), 'total_quantity':cart.get_total_quantity()})
     
-class SessionCartSummaryView(TemplateView):
+class CartSummaryView(TemplateView):
     template_name = 'cart/session_cart_summary.html'
     
     def get_context_data(self, **kwargs):
