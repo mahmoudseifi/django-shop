@@ -22,6 +22,9 @@ class CouponModel(models.Model):
     
     def __str__(self):
         return self.code
+    
+    def total_used_by(self):
+        return self.used_by.all().count()
 
 
 class AddressUserModel(models.Model):
