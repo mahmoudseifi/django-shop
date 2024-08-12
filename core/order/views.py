@@ -59,6 +59,11 @@ class CheckoutView(LoginRequiredMixin, HasCustomerAccessPermission, FormView):
                 price=item.product.get_price(),
             )
             
+            # Update the product stock in product models
+            product = item.product
+            product.stock -= item.quantity
+            product.save()
+            
             
     def clear_cart(self, cart):
         cart.cart_items.all().delete()
