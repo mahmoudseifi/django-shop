@@ -1,14 +1,8 @@
 from django.db.models.base import Model as Model
-from django.forms import BaseForm
-from django.http.response import HttpResponse
-from django.shortcuts import redirect
 from django.views.generic import ListView, UpdateView, DeleteView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import views as auth_views
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from accounts.models import Profile
-from django.contrib import messages
 from django.core.exceptions import FieldError
 from shop.models import ProductModel, ProductCategoryModel
 from ..forms import AdminProductForm
