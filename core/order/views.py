@@ -1,4 +1,3 @@
-
 from django.views.generic import FormView, TemplateView, View
 from django.http import JsonResponse
 from django.utils import timezone
@@ -8,6 +7,9 @@ from django.urls import reverse_lazy
 from cart.models import CartModel
 from decimal import Decimal
 from cart.cart import CartSession
+from django.shortcuts import redirect
+from payment.zarinpal_client import ZarinpalSandbox
+from payment.models import PaymentModel
 from .models import AddressUserModel, OrderItemModel, OrderModel, CouponModel
 from .permissions import HasCustomerAccessPermission
 from .forms import CheckoutForm
@@ -38,8 +40,26 @@ class CheckoutView(LoginRequiredMixin, HasCustomerAccessPermission, FormView):
         total_price = order.calculate_total_price()
         self.apply_coupon(coupon, order, user, total_price)
         order.save()
-        return super().form_valid(form)
+        return self.create_payment_url(order)
     
+    
+    def create_payment_url(self, order):
+        zainpal = ZarinpalSandbox()
+        response = zainpal.payment_request(order.total_price)
+        # check for errors in response, if response is ok data is dict and if not ok reponse errors is dict and show code errors
+        # if amount is less than 1000 rials its errors
+        if type(response['data']) == dict:
+            payment_obj = PaymentModel.objects.create(
+                authority_id =  response['data'].get('authority'),
+                amount = order.total_price,
+            )
+            order.payment = payment_obj
+            order.save()
+        
+            return redirect(zainpal.generate_payment_url(response['data'].get('authority')))
+        else:
+            return redirect(reverse_lazy('order:failed'))
+        
     
     def create_order(self, address):
         return OrderModel.objects.create(
@@ -105,6 +125,9 @@ class CheckoutView(LoginRequiredMixin, HasCustomerAccessPermission, FormView):
 
 class OrderCompletedView(LoginRequiredMixin, HasCustomerAccessPermission, TemplateView):
     template_name = 'order/completed.html'
+    
+class OrderFailedView(LoginRequiredMixin, HasCustomerAccessPermission, TemplateView):
+    template_name = 'order/failed.html'
     
     
 

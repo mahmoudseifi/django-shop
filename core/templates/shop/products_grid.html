@@ -201,8 +201,12 @@
               <h4 class="card-title">
                 <a class="text-dark" href="{% url 'shop:product_detail' slug=object.slug %}">{{ object.title }}</a>
               </h4>
+              {% if object.stock > 0 %} 
               <p class="card-text text-dark formatted-price">{{ object.get_price }}</p>
               <span class="ms-2 formatted-price text-decoration-line-through"> {{object.price}}</span>
+              {% else %}
+              <p class="card-text text-dark">ناموجود</p>
+              {% endif %}
             </div>
 
             <div class="card-footer pt-0">
