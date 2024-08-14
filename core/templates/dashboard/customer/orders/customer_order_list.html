@@ -1,0 +1,255 @@
+{% extends "dashboard/customer/base.html" %}
+{% load static %}
+
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb breadcrumb-light mb-0">
+    <li class="breadcrumb-item">حساب</li>
+    <li class="breadcrumb-item" aria-current="page">
+      داشبورد کاربر
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      لیست سفارشات
+    </li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<!-- Card -->
+<div class="card">
+  <!-- Header -->
+  <div class="card-header border-bottom">
+    <form class="input-group input-group-merge">
+      <div class="input-group-prepend input-group-text">
+        <i class="bi-search"></i>
+      </div>
+      <input type="search" class="form-control" placeholder="جستجو کنید" aria-label="Search orders">
+    </form>
+  </div>
+  <!-- End Header -->
+
+  <!-- Body -->
+  <div class="card-body">
+    <!-- Nav Scroller -->
+    <div class="js-nav-scroller hs-nav-scroller-horizontal">
+      <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+        <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+          <i class="bi-chevron-left"></i>
+        </a>
+      </span>
+
+      <span class="hs-nav-scroller-arrow-next" style="display: none;">
+        <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+          <i class="bi-chevron-right"></i>
+        </a>
+      </span>
+
+      <!-- Nav -->
+      <ul class="nav nav-segment nav-fill mb-7" id="featuresTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a class="nav-link active" href="#accountOrdersOne" id="accountOrdersOne-tab" data-bs-toggle="tab"
+            data-bs-target="#accountOrdersOne" role="tab" aria-controls="accountOrdersOne"
+            aria-selected="true">سفارشات</a>
+        </li>
+
+        <li class="nav-item" role="presentation">
+          <a class="nav-link" href="#accountOrdersTwo" id="accountOrdersTwo-tab" data-bs-toggle="tab"
+            data-bs-target="#accountOrdersTwo" role="tab" aria-controls="accountOrdersTwo" aria-selected="false">سفارشات
+            تحویل شده</a>
+        </li>
+
+        <li class="nav-item" role="presentation">
+          <a class="nav-link" href="#accountOrdersThree" id="accountOrdersThree-tab" data-bs-toggle="tab"
+            data-bs-target="#accountOrdersThree" role="tab" aria-controls="accountOrdersThree"
+            aria-selected="false">سفارشات لغو شده</a>
+        </li>
+      </ul>
+      <!-- End Nav -->
+    </div>
+    <!-- End Nav Scroller -->
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="accountOrdersTabContent">
+      <div class="tab-pane fade show active" id="accountOrdersOne" role="tabpanel"
+        aria-labelledby="accountOrdersOne-tab">
+        <!-- Select Group -->
+        <div class="d-sm-flex align-items-sm-center mb-5">
+          <div class="mb-2 mb-sm-0 me-3">
+            <span><strong class="text-dark me-3">سفارشات شما</span>
+          </div>
+
+          <!-- Select -->
+          <div class="tom-select-custom">
+            <select class="form-select" id="order-by-filter" name="order_by">
+              <option value="" selected>مرتب سازی</option>
+              <option value="-created_date">جدیدترین</option>
+              <option value="created_date">قدیمی ترین</option>
+            </select>
+          </div>
+          <!-- End Select -->
+        </div>
+        <!-- End Select Group -->
+
+        <ul class="list-unstyled mb-5">
+          {% for object in object_list %}
+          <!-- Card -->
+          <li class="card card-bordered shadow-none mb-3">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-6 col-md mb-3 mb-md-0">
+                  <small class="card-subtitle mb-0 ">مبلغ کل </small>
+                  <small class="text-dark fw-semibold formatted-price">{{ object.total_price }}</small>
+                </div>
+                <!-- End Col -->
+
+                <div class="col-6 col-md mb-3 mb-md-0">
+                  <small class="card-subtitle mb-0">وضعیت </small>
+                  <small class="text-dark fw-semibold">{{ object.get_status.label }}</small>
+                </div>
+                <!-- End Col -->
+
+                <div class="col-6 col-md">
+                  <small class="card-subtitle mb-0">شماره سفارش.</small>
+                  <small class="text-dark fw-semibold">{{ object.id }}</small>
+                </div>
+                <!-- End Col -->
+
+                <div class="col-6 col-md">
+                  <small class="card-subtitle mb-0">زمان سفارش:</small>
+                  <small class="text-dark fw-semibold">{{ object.created_date|date:"Y-m-d h:i" }}</small>
+                </div>
+                <!-- End Col -->
+              </div>
+              <!-- End Row -->
+
+              <hr>
+
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row gx-2">
+                    {% for order_item in object.order_items.all|slice:"4" %}
+                    <div class="col">
+                      <img class="img-fluid" src="{{order_item.product.image.url}}" alt="Image Description">
+                    </div>
+                    {% endfor %}
+                  </div>
+                  <!-- End Row -->
+                </div>
+
+                <div class="col-md-4">
+                  <div class="d-grid gap-2">
+          
+                    <a class="btn btn-white btn-sm" href="#">
+                      <i class="bi-receipt small me-2"></i> مشاهده فاکتور
+                    </a>
+                    <a class="btn btn-primary btn-sm" href="{% url 'dashboard:customer:customer_order_detail' pk=object.id %}">مشاهده سفارش</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          <!-- End Card -->
+          {% endfor %}
+
+        </ul>
+
+        {% if page_obj.has_other_pages %}
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+              <button class="page-link" onclick="changePage('{{ page_obj.previous_page_number }}')"
+                aria-label="Previous">
+                <span aria-hidden="true">
+                  <i class="bi-chevron-double-right small"></i>
+                </span>
+              </button>
+            </li>
+            {% endif %}
+            {{ page_obj.page_range }}
+            {% for i in page_obj.paginator.page_range %}
+            {% if page_obj.number == i %}
+            <li class="page-item active">
+              <a class="page-link">{{ i }}</a>
+            </li>
+            {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %} <li class="page-item">
+              <button class="page-link" onclick="changePage('{{ i }}')">{{ i }}</button></li>
+              {% endif %}
+              {% endfor %}
+
+              {% if page_obj.has_next %}
+              <li class="page-item">
+                <button class="page-link" onclick="changePage('{{ page_obj.next_page_number }}')" aria-label="Next">
+                  <span aria-hidden="true">
+                    <i class="bi-chevron-double-left small"></i>
+                  </span>
+                </button>
+              </li>
+              {% endif %}
+
+          </ul>
+        </nav>
+        <!-- End Pagination -->
+        {% endif %}
+      </div>
+
+      <div class="tab-pane fade" id="accountOrdersTwo" role="tabpanel" aria-labelledby="accountOrdersTwo-tab">
+        <!-- Empty State -->
+        <div class="text-center content-space-1">
+          <img class="avatar avatar-xl mb-3" src="{% static 'svg/illustrations/empty-state-no-data.svg' %}"
+            alt="Image Description">
+          <p class="card-text">هیچ داده ای برای نمایش وجود ندارد</p>
+          <a class="btn btn-white btn-sm" href="{% url 'shop:product_grid' %}">شروع به خرید کنید</a>
+        </div>
+        <!-- End Empty State -->
+      </div>
+
+      <div class="tab-pane fade" id="accountOrdersThree" role="tabpanel" aria-labelledby="accountOrdersThree-tab">
+        <!-- Empty State -->
+        <div class="text-center content-space-1">
+          <img class="avatar avatar-xl mb-3" src="{% static 'svg/illustrations/empty-state-no-data.svg' %}"
+            alt="Image Description">
+          <p class="card-text">هیچ داده ای برای نمایش وجود ندارد</p>
+          <a class="btn btn-white btn-sm" href="{% url 'shop:product_grid' %}">شروع به خرید کنید</a>
+        </div>
+        <!-- End Empty State -->
+      </div>
+    </div>
+    <!-- End Tab Content -->
+  </div>
+  <!-- End Body -->
+</div>
+<!-- End Card -->
+{% endblock %}
+
+{% block extra_js %}
+<script>
+
+  $(document).ready(function () {
+    let current_url_params = new URLSearchParams(window.location.search)
+    $("#page-size-filter").val(current_url_params.get("page_size") || "")
+    $("#order-by-filter").val(current_url_params.get("order_by") || "")
+  });
+  $('#page-size-filter').change(function () {
+    let current_url_params = new URLSearchParams(window.location.search)
+    var selectedOption = $(this).val();
+    current_url_params.set("page_size", selectedOption)
+    let new_url = window.location.pathname + "?" + current_url_params.toString()
+    window.location.href = new_url
+  });
+  $('#order-by-filter').change(function () {
+    let current_url_params = new URLSearchParams(window.location.search)
+    var selectedOption = $(this).val();
+    current_url_params.set("order_by", selectedOption)
+    let new_url = window.location.pathname + "?" + current_url_params.toString()
+    window.location.href = new_url
+  });
+
+</script>
+
+
+{% endblock extra_js %}

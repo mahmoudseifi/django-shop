@@ -57,11 +57,25 @@ class OrderModel(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     
+    class Meta:
+        ordering = ['-created_date']
+    
     def __str__(self):
         return f"{self.user.email} - {self.id}"
     
     def calculate_total_price(self):
         return sum(item.price * item.quantity for item in self.order_items.all())
+    
+    def get_status(self):
+        return {
+            "id":self.status,
+            "title": OrderStatusType(self.status).name,
+            "label" : OrderStatusType(self.status).label
+            
+        }
+        
+    def get_full_address(self):
+        return f"{self.state}-{self.city}-{self.address}"
     
     
 class OrderItemModel(models.Model):
