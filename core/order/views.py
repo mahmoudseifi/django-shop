@@ -45,13 +45,13 @@ class CheckoutView(LoginRequiredMixin, HasCustomerAccessPermission, FormView):
     
     def create_payment_url(self, order):
         zainpal = ZarinpalSandbox()
-        response = zainpal.payment_request(order.total_price)
+        response = zainpal.payment_request(order.get_price())
         # check for errors in response, if response is ok data is dict and if not ok reponse errors is dict and show code errors
         # if amount is less than 1000 rials its errors
         if type(response['data']) == dict:
             payment_obj = PaymentModel.objects.create(
                 authority_id =  response['data'].get('authority'),
-                amount = order.total_price,
+                amount = order.get_price(),
             )
             order.payment = payment_obj
             order.save()

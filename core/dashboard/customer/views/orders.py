@@ -1,8 +1,7 @@
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import FieldError
-from django.shortcuts import get_object_or_404
-from order.models import OrderModel
+from order.models import OrderModel, OrderStatusType
 from ...permissions import HasCustomerAccessPermission
 
 class CustomerOrderListView(LoginRequiredMixin, HasCustomerAccessPermission, ListView):
@@ -14,8 +13,10 @@ class CustomerOrderListView(LoginRequiredMixin, HasCustomerAccessPermission, Lis
     
     def get_queryset(self):
         queryset = OrderModel.objects.filter(user=self.request.user)
-        if status_orders:=self.request.GET.get('status_orders'):
-            queryset = queryset.filter(status=status_orders)
+        if search_q := self.request.GET.get("q"):
+            queryset = queryset.filter(id__icontains=search_q)
+        if status := self.request.GET.get("status"):
+            queryset = queryset.filter(status=status)
         if order_by := self.request.GET.get('order_by'):
             try:
                 queryset = queryset.order_by(order_by)
@@ -24,7 +25,11 @@ class CustomerOrderListView(LoginRequiredMixin, HasCustomerAccessPermission, Lis
         
         return queryset
     
-    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["total_items"] = self.get_queryset().count()
+        context["status_types"] = OrderStatusType.choices  
+        return context
     
 class CustomerOrderDetailView(LoginRequiredMixin, HasCustomerAccessPermission, DetailView):
     template_name = 'dashboard/customer/orders/customer_order_detail.html'
