@@ -55,7 +55,7 @@ class CheckoutView(LoginRequiredMixin, HasCustomerAccessPermission, FormView):
             )
             order.payment = payment_obj
             order.save()
-        
+            
             return redirect(zainpal.generate_payment_url(response['data'].get('authority')))
         else:
             return redirect(reverse_lazy('order:failed'))
@@ -72,18 +72,15 @@ class CheckoutView(LoginRequiredMixin, HasCustomerAccessPermission, FormView):
         
     def create_order_items(self, order, cart):
         for item in cart.cart_items.all():
-            OrderItemModel.objects.create(
-                order=order,
-                product=item.product,
-                quantity=item.quantity,
-                price=item.product.get_price(),
-            )
-            
-            # Update the product stock in product models
-            product = item.product
-            product.stock -= item.quantity
-            product.save()
-            
+            if item.product.stock >= item.quantity:
+                OrderItemModel.objects.create(
+                    order=order,
+                    product=item.product,
+                    quantity=item.quantity,
+                    price=item.product.get_price(),
+                )
+            else:
+                return redirect(reverse_lazy('order:failed'))
             
     def clear_cart(self, cart):
         cart.cart_items.all().delete()

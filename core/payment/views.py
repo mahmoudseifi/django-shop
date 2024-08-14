@@ -24,6 +24,12 @@ class PaymentVerifyView(View):
                 payment_obj.save()
                 order_obj.status = OrderStatusType.success.value
                 order_obj.save()
+                
+                for item in order_obj.order_items.all():
+                    # Update the product stock in product models
+                    product = item.product
+                    product.stock -= item.quantity
+                    product.save()
                 return redirect(reverse_lazy('order:completed'))
         else:
             payment_obj.response_json = response
