@@ -6,4 +6,5 @@ app_name = 'shop'
 urlpatterns = [
     path('product/grid/', views.ShopProductGridView.as_view(), name='product_grid'),
     re_path(r'product/(?P<slug>[-\w]+)/detail/', views.ShopProductDetailView.as_view(), name='product_detail'),
+    path('add-or-remove-wishlist/', views.AddOrRemoveWishListView.as_view(), name='add_or_remove_wishlist'),
 ]
