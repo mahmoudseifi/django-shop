@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.db.models import Avg
 
 class ReviewStatusType(models.IntegerChoices):
     pending = 1, "در انتظار تایید"
@@ -36,4 +37,15 @@ class ReviewModel(models.Model):
     
 @receiver(post_save, sender=ReviewModel)
 def calculate_avg_rate(sender, instance, created, **kwargs):
-    pass
+    if instance.status == ReviewStatusType.accepted.value:
+        product = instance.product
+        
+        # Retrieve all reviews for the associated product
+        product_reviews = ReviewModel.objects.filter(product=product, status=ReviewStatusType.accepted )
+        
+        # Calculate the average rating
+        avg_rating = product_reviews.aggregate(average=Avg('rate'))['average']
+        
+        # update product avg field in ProductModel
+        product.avg_rate = round(avg_rating,1)
+        product.save()
