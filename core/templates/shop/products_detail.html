@@ -59,12 +59,20 @@
 
     <div class="col-md-5">
       <!-- Rating -->
-      <a class="d-flex gap-1 mb-4" href="#reviewSection">
-        <span><i class="bi bi-star-fill star-rate"></i></span>
-        <span><i class="bi bi-star-fill star-rate"></i></span>
-        <span><i class="bi bi-star-fill star-rate"></i></span>
-        <span><i class="bi bi-star star-rate"></i></span>
-        <span><i class="bi bi-star star-rate"></i></span>
+      <!-- Rating -->
+
+      <div class="d-flex gap-1 small">
+        {% for i in "12345" %}
+          {% if object.avg_rate|floatformat:1 >= i %}
+            <i class="bi bi-star-fill star-rate"></i> <!-- Full Star -->
+          {% elif object.avg_rate|floatformat:1 >= i|add:"-0.5" %}
+              <i class="bi bi-star-half star-rate"></i> <!-- Half Star -->
+          {% else %}
+            <i class="bi bi-star star-rate"></i> <!-- Empty Star -->
+          {% endif %}
+        {% endfor %}
+
+      </div>
 
         <span class="ms-1">{{object.avg_rate}}/5 </span>
       </a>
@@ -268,12 +276,18 @@
 
                   <div class="flex-grow-1 ms-3">
                     <!-- Rating -->
+
                     <div class="d-flex gap-1 small">
-                      <span><i class="bi bi-star"></i></span>
-                      <span><i class="bi bi-star"></i></span>
-                      <span><i class="bi bi-star"></i></span>
-                      <span><i class="bi bi-star"></i></span>
-                      <span><i class="bi bi-star"></i></span>
+                      {% for i in "12345" %}
+                        {% if object.avg_rate|floatformat:1 >= i %}
+                          <i class="bi bi-star-fill star-rate"></i> <!-- Full Star -->
+                        {% elif object.avg_rate|floatformat:1 >= i|add:"-0.5" %}
+                            <i class="bi bi-star-half star-rate"></i> <!-- Half Star -->
+                        {% else %}
+                          <i class="bi bi-star star-rate"></i> <!-- Empty Star -->
+                        {% endif %}
+                      {% endfor %}
+
                     </div>
                     <!-- End Rating -->
                     <span class="text-white">{{reviews.count}} دیدگاه</span>
@@ -454,11 +468,11 @@
                 </div>
               </div>
               <!-- End Col -->
-               {% else %}
-               <a href="{% url 'accounts:login' %}">برای ثبت دیدگاه وارد شوید.
-               </a>
-               {% endif %}
-              </div>
+              {% else %}
+              <a href="{% url 'accounts:login' %}">برای ثبت دیدگاه وارد شوید.
+              </a>
+              {% endif %}
+            </div>
             <!-- End Row -->
           </div>
           <!-- End Heading -->
@@ -469,14 +483,14 @@
             <!-- Item -->
             <li class="list-comment-item">
               <div class="d-flex gap-1 mb-3">
+
                 {% for i in "12345" %}
-                {% if i|add:0 <= review.rate %}
-                 <span><i class="bi bi-star-fill star-rate"></i></span>
+                {% if i|add:0 <= review.rate %} <span><i class="bi bi-star-fill star-rate"></i></span>
                   {% else %}
                   <span><i class="bi bi-star star-rate"></i></span>
                   {% endif %}
                   {% endfor %}
-                   </div>
+              </div>
 
               <!-- Media -->
               <div class="d-flex align-items-center mb-3">
