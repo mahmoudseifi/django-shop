@@ -209,11 +209,19 @@
               <!-- Rating -->
               <a class="d-inline-flex align-items-center mb-3" href="#">
                 <div class="d-flex gap-1 ms-2">
-                  <img src="{% static 'svg/illustrations/star-muted.svg' %}" alt="Review rating" width="16">
-                  <img src="{% static 'svg/illustrations/star-muted.svg' %}" alt="Review rating" width="16">
-                  <img src="{% static 'svg/illustrations/star-muted.svg' %}" alt="Review rating" width="16">
-                  <img src="{% static 'svg/illustrations/star-muted.svg' %}" alt="Review rating" width="16">
-                  <img src="{% static 'svg/illustrations/star-muted.svg' %}" alt="Review rating" width="16">
+                 <!-- Rating -->
+
+               
+                  {% for i in "12345" %}
+                    {% if object.avg_rate|floatformat:1 >= i %}
+                      <i class="bi bi-star-fill star-rate"></i> <!-- Full Star -->
+                    {% elif object.avg_rate|floatformat:1 >= i|add:"-0.5" %}
+                        <i class="bi bi-star-half star-rate"></i> <!-- Half Star -->
+                    {% else %}
+                      <i class="bi bi-star star-rate"></i> <!-- Empty Star -->
+                    {% endif %}
+                  {% endfor %}
+
                 </div>
                 <span class="small">{{object.avg_rate}}/5</span>
               </a>
