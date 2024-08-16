@@ -7,6 +7,7 @@ from django.views.generic import (
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import FieldError
+from review.models import ReviewModel, ReviewStatusType
 from .models import ProductModel, ProductStatusType, ProductCategoryModel, ProductWishlistModel
 
 
@@ -52,8 +53,10 @@ class ShopProductDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        product = self.get_object()
+        context['reviews'] = ReviewModel.objects.filter(product=product, status=ReviewStatusType.accepted.value)
         context['is_wished'] = ProductWishlistModel.objects.filter(
-            user=self.request.user, product__id=self.get_object().id).exists() if self.request.user.is_authenticated else False
+            user=self.request.user, product__id=product.id).exists() if self.request.user.is_authenticated else False
         return context
 
 
