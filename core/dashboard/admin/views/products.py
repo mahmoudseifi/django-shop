@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.core.exceptions import FieldError
-from shop.models import ProductModel, ProductCategoryModel
+from shop.models import ProductModel, ProductCategoryModel, ProductStatusType
 from ..forms import AdminProductForm
 from ...permissions import HasAdminAccessPermission
 
@@ -21,6 +21,8 @@ class AdminProductListView(LoginRequiredMixin, HasAdminAccessPermission, ListVie
         queryset = ProductModel.objects.all()
         if search_q:=self.request.GET.get('q'):
             queryset = queryset.filter(title__icontains=search_q)
+        if status:=self.request.GET.get('status'):
+            queryset = queryset.filter(status=status)
         if category_id:=self.request.GET.get('category_id'):
             queryset = queryset.filter(category__id=category_id)
         if min_price:=self.request.GET.get('min_price'):
@@ -39,7 +41,7 @@ class AdminProductListView(LoginRequiredMixin, HasAdminAccessPermission, ListVie
         context = super().get_context_data(**kwargs)
         context['total_items'] = self.get_queryset().count()
         context['categories'] = ProductCategoryModel.objects.all()
-        
+        context['status_types'] = ProductStatusType.choices
         return context
 
 

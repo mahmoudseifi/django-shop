@@ -46,6 +46,13 @@ class ProductModel(models.Model):
         discounted_amount = self.price - discount_amount
         return round(discounted_amount)
     
+    def get_status(self):
+        return {
+            "id":self.status,
+            "title": ProductStatusType(self.status).name,
+            "label" : ProductStatusType(self.status).label
+            
+        }  
     
     def is_discounted(self):
         return self.discount_percent != 0

@@ -1,6 +1,18 @@
 {% extends "dashboard/admin/base.html" %}
 {% load static %}
 
+{% block extra_css %}
+<style>
+
+  .bg-publish {
+    background-color: #198754;
+  }
+
+  .bg-draft {
+    background-color: #dc3545;
+  }
+</style>
+{% endblock %}
 
 {% block breadcrumb %}
 <nav aria-label="breadcrumb">
@@ -37,6 +49,14 @@
         <div class="col-md-3 py-1">
           <input type="text" class="form-control " placeholder="جستجوی کالا" aria-label="جستجوی " name="q">
 
+        </div>
+        <div class="col-md-3 py-1">
+          <select class="form-select form-select-sm" id="status-type-filter" name="status">
+            <option value="" selected>وضعیت</option>
+            {% for status_type in status_types %}
+            <option value="{{status_type.0}}">{{status_type.1}}</option>
+            {% endfor %}
+          </select>
         </div>
         <!-- End Input Card -->
         <div class="col-md-3 py-1">
@@ -101,8 +121,7 @@
               </td>
               <td>{{object.price}}</td>
               <td>{{object.stock}}</td>
-              <td>{% if object.is_published %}<span class="badge bg-success">نشر شده</span> {% else %} <span
-                  class="badge bg-danger">ذخیره</span>{% endif %}</td>
+              <td><span class="badge bg-{{object.get_status.title}}">{{object.get_status.label}}</span></td>
               <td>{{object.discount_percent}}</td>
               <td>
                 <a class="btn btn-sm btn-icon btn-ghost-secondary"
@@ -183,6 +202,7 @@
     $("#min-price-filter").val(current_url_params.get("min_price") || "")
     $("#max-price-filter").val(current_url_params.get("max_price") || "")
     $("#category-id-filter").val(current_url_params.get("category_id") || "")
+    $("#status-type-filter").val(current_url_params.get("status") || "")
 
   });
   $('#page-size-filter').change(function () {
@@ -196,6 +216,20 @@
     let current_url_params = new URLSearchParams(window.location.search)
     var selectedOption = $(this).val();
     current_url_params.set("order_by", selectedOption)
+    let new_url = window.location.pathname + "?" + current_url_params.toString()
+    window.location.href = new_url
+  });
+  $('#status-type-filter').change(function () {
+    let current_url_params = new URLSearchParams(window.location.search)
+    var selectedOption = $(this).val();
+    current_url_params.set("status", selectedOption)
+    let new_url = window.location.pathname + "?" + current_url_params.toString()
+    window.location.href = new_url
+  });
+  $('#category-id-filter').change(function () {
+    let current_url_params = new URLSearchParams(window.location.search)
+    var selectedOption = $(this).val();
+    current_url_params.set("category_id", selectedOption)
     let new_url = window.location.pathname + "?" + current_url_params.toString()
     window.location.href = new_url
   });
